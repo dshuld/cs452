@@ -21,7 +21,7 @@ The books published when their author was over 50 years old are:
 - The Catcher in the Rye
 
 ## Question that it tripped up on
-It struggled because it did not know the data being stored, only the tables and columns, so when asked to find fictional books, it searched for genres containing "fictional" in thier name (as a guess), which was none of them, depsite "Fiction", "Science Fiction", or "Fantasy" being likely intended matches for the query.
+It struggled because it did not know the data being stored, only the tables and columns, so when asked to find fictional books, it searched for genres containing "fictional" in their name (as a guess), which was none of them, depsite "Fiction", "Science Fiction", or "Fantasy" being likely intended matches for the query.
 
 Question: "What percent of books were fictional?"
 
