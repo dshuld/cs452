@@ -1,0 +1,110 @@
+Question: "Which books were published when their author was over 50 years old?"
+
+SQL:
+SELECT b.book_id, b.title
+FROM book b
+JOIN author a ON b.author_id = a.author_id
+WHERE EXTRACT(YEAR FROM age(b.publish_date, a.birth_date)) > 50;
+
+Answer:
+The books published when their author was over 50 years old are:
+- The Lord of the Rings: The Fellowship of the Ring
+- The Catcher in the Rye
+
+-------------------------------------------------------------------------------
+
+Question: "Does J.K. Rowling always have the same publisher?"
+
+SQL:
+SELECT COUNT(DISTINCT publisher_id) = 1 AS has_one_publisher
+FROM book
+JOIN author ON book.author_id = author.author_id
+WHERE LOWER(first_name) = 'j.k.' AND LOWER(last_name) = 'rowling';
+
+Answer:
+Yes.
+
+-------------------------------------------------------------------------------
+
+Question: "How can I contact C.S. Lewis's publisher?"
+
+SQL:
+SELECT publisher.phone
+FROM publisher
+JOIN book ON publisher.publisher_id = book.publisher_id
+JOIN author ON book.author_id = author.author_id
+WHERE author.first_name = 'C.S.' AND author.last_name = 'Lewis';
+
+Answer:
+You can contact C.S. Lewis's publisher at 212-782-9000.
+
+-------------------------------------------------------------------------------
+
+Question: "What are the three most recent books from different publishers?"
+
+SQL:
+SELECT book.title, book.publish_date, publisher.name
+FROM book
+JOIN publisher ON book.publisher_id = publisher.publisher_id
+ORDER BY book.publish_date DESC
+LIMIT 3;
+
+Answer:
+Based on the results, the three most recent books from different publishers cannot be determined because the first two books listed are from the same publisher, HarperCollins. Only one book from a different publisher, "It" published by Macmillan Publishers, is included. The query results do not satisfy the requirement for books from different publishers.
+
+-------------------------------------------------------------------------------
+
+Question: "What are the three most recent books, ignoring books from publishers of already selected books?"
+
+SQL:
+SELECT DISTINCT ON (publisher_id) book_id, title, publish_date
+FROM book
+ORDER BY publisher_id, publish_date DESC
+LIMIT 3
+
+Answer:
+The three most recent books, each from a unique publisher, are:
+
+1. "The Lord of the Rings: The Fellowship of the Ring," published on July 29, 1954.
+2. "Harry Potter and the Chamber of Secrets," published on July 2, 1998.
+3. "The Catcher in the Rye," published on July 16, 1951.
+
+-------------------------------------------------------------------------------
+
+Question: "Which books are published within 3 months after the author's birthday?"
+
+SQL:
+SELECT book.*
+FROM book
+JOIN author ON book.author_id = author.author_id
+WHERE EXTRACT(MONTH FROM AGE(book.publish_date, author.birth_date)) < 3
+AND EXTRACT(DAY FROM AGE(book.publish_date, author.birth_date)) >= 0;
+
+Answer:
+Animal Farm, Pride and Prejudice, To Kill a Mockingbird, The Great Divorce
+
+-------------------------------------------------------------------------------
+
+Question: "What percent of books were fictional?"
+
+SQL:
+SELECT
+  (COUNT(CASE WHEN genre ILIKE 'fictional' THEN 1 END)::FLOAT / COUNT(*) * 100) AS percent_fictional
+FROM
+  book;
+
+Answer:
+0% of books were fictional.
+
+-------------------------------------------------------------------------------
+
+Question: "What percent of books are fiction?"
+
+SQL:
+SELECT
+    (COUNT(*) FILTER (WHERE LOWER(genre) = 'fiction') * 100.0 / COUNT(*)) AS fiction_percentage
+FROM
+    book;
+
+Answer:
+16.67% of books are fiction.
